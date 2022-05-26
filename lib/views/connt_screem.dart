@@ -11,6 +11,23 @@ class ContadorScreen extends StatefulWidget {
 
 class _ContadorState extends State<ContadorScreen> {
   int counter = 0;
+
+  void increment() {
+    counter++;
+    setState(() {});
+  }
+
+  void decrement() {
+    counter--;
+    setState(() {});
+  }
+
+  void restart() {
+    counter = 0;
+    setState(() {});
+  }
+
+  // ignore: non_constant_identifier_names
   change_color_text() {
     if (counter % 2 == 0) {
       return Colors.primaries[Random().nextInt(Colors.primaries.length)];
@@ -45,19 +62,42 @@ class _ContadorState extends State<ContadorScreen> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showMessage();
-              setState(() {
-                counter++;
-              });
-            },
-            child: const Icon(
-              Icons.color_lens_outlined,
-            )));
+        floatingActionButton: CustomFloatingActionButtonLocation(
+          increaseFn: increment,
+          decreaseFn: decrement,
+          restarFn: restart,
+        ));
   }
 
   void showMessage() {
     print('hola');
+  }
+}
+
+class CustomFloatingActionButtonLocation extends StatelessWidget {
+  final Function increaseFn;
+  final Function decreaseFn;
+  final Function restarFn;
+
+  const CustomFloatingActionButtonLocation({
+    Key? key,
+    required this.increaseFn,
+    required this.decreaseFn,
+    required this.restarFn,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        FloatingActionButton(
+            child: const Icon(Icons.add), onPressed: () => increaseFn()),
+        FloatingActionButton(
+            child: const Icon(Icons.restart_alt), onPressed: () => restarFn()),
+        FloatingActionButton(
+            child: const Icon(Icons.exposure_minus_1),
+            onPressed: () => decreaseFn()),
+      ],
+    );
   }
 }
